@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <title>CWIE predict</title>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-1 mb-12 border-bottom ">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <img height="100px" width:="80px"
+                    src="https://upload.wikimedia.org/wikipedia/th/thumb/7/78/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%A9%E0%B8%93%E0%B9%8C%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B8%A3%E0%B8%B2%E0%B8%8A%E0%B8%A0%E0%B8%B1%E0%B8%8F%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B8%B2%E0%B8%A1.svg/1200px-%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%A9%E0%B8%93%E0%B9%8C%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B8%A3%E0%B8%B2%E0%B8%8A%E0%B8%A0%E0%B8%B1%E0%B8%8F%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B8%B2%E0%B8%A1.svg.png"
+                    alt="">
+                    
+                <span class=" fw-bold text-dark" style="font-size: 30px ">
+                    &nbsp;ระบบแนะนำตำแหน่งงานสหกิจศึกษาและการศึกษาเชิงบูรณาการกับการทำงาน</span> 
+            </a>
+    
+        </header>
+    </div>
+
+    <br>
+
+    <center>
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <div class="mb-3 col-4 justify-content-">
+                <!-- <label class="form-label text-danger fw-bolder" for="customFile">{{ msg_empty }} </label> -->
+                <input type="file" class="form-control" accept="application/pdf" id="customFile" name="resumefile">
+                <br>
+
+                <input type="submit" class="form-control btn btn-success " style=" font-size: 18px;"
+                    value="ค้นหาตำแหน่งงาน"required>
+                <div class="msg text-danger fw-bolder" >{{ msg_empty }}</div>
+            </div>
+        </form>
+
+    </center>
+    <!-- ส่วนแสดงผล -->
+    {% if data %}
+    <div class="px-4 py-0 my-0 text-center">
+        <h4 class="display-8 fw-bold"style=" font-size: 23px; "> {{job_title}}{{skill}} </h4>
+        <div class="col-lg-8 mx-auto">
+            <p class="lead mb-8 ">
+                <!-- ส่วนแสดงตำแหน่งงานที่แนะนำ -->
+            <div class="h-100 p-3 bg-white border rounded-2 border rounded-2 ">
+                <p class=" fw-bolder " style=" font-size: 23px; "> {{company}} </p>
+                <!-- {% if data %} -->
+                <!-- box 1 -->
+                <form action="{{data[4][0]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 1. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][0]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][0]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][0]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][0]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][0]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 1 -->
+
+                <!-- box 2 -->
+                <form action="{{data[4][1]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 2. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][2]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][1]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][1]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][1]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][1]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 2 -->
+
+                <!-- box 3 -->
+                <form action="{{data[4][2]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 3. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][4]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][2]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][2]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][2]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][2]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 3 -->
+
+                <!-- box 4 -->
+                <form action="{{data[4][3]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 4. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][6]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][3]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][3]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][3]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][3]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 4 -->
+
+                <!-- box 5 -->
+                <form action="{{data[4][4]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 5. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][8]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][4]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][4]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][4]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][4]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 5 -->
+
+                <!-- box 6 -->
+                <form action="{{data[4][5]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 6. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][10]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][5]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][5]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][5]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][5]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 6 -->
+
+                <!-- box 7 -->
+                <form action="{{data[4][6]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 7. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][12]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][6]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][6]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][6]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][6]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 7 -->
+
+                <!-- box 8 -->
+                <form action="{{data[4][7]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 8. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][14]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][7]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][7]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][7]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][7]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 8 -->
+
+                <!-- box 9 -->
+                <form action="{{data[4][8]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 9. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][16]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][8]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][8]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][8]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][8]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 9 -->
+
+                <!-- box 10 -->
+                <form action="{{data[4][9]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 10. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][18]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][9]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][9]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][9]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][9]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 10 -->
+
+                <!-- box 11 -->
+                <form action="{{data[4][10]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 11. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][20]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][10]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][10]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][10]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][10]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 11 -->
+
+                <!-- box 12 -->
+                <form action="{{data[4][11]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 12. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][22]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][11]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][11]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][11]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][11]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 12 -->
+
+                <!-- box 13 -->
+                <form action="{{data[4][12]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 13. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][24]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][12]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][12]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][12]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][12]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 13 -->
+
+                <!-- box 14 -->
+                <form action="{{data[4][13]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 14. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][26]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][13]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][13]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][13]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][13]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 14 -->
+
+                <!-- box 15 -->
+                <form action="{{data[4][14]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 15. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][28]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][14]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][14]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][14]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][14]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 15 -->
+
+                <!-- box 16 -->
+                <form action="{{data[4][15]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 16. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][30]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][15]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][15]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][15]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][15]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 16 -->
+
+                <!-- box 17 -->
+                <form action="{{data[4][16]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 17. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][32]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][16]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][16]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][16]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][16]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 17 -->
+
+                <!-- box 18 -->
+                <form action="{{data[4][17]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 18. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][34]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][17]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][17]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][17]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][17]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 18 -->
+
+                <!-- box 19 -->
+                <form action="{{data[4][18]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 19. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][36]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][18]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][18]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][18]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][18]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 19 -->
+
+                <!-- box 20 -->
+                <form action="{{data[4][19]}}" method="get" target="_blank">
+                    <button class=" p-3 btn1 default border rounded-2 col-12 ">
+                        
+                        <div class="row-cols-auto">
+                            <div id='div1'>
+                                <p style="font-size: 16px; color: rgb(51, 51, 51);"> 20. </p> 
+                            </div>
+                            <div id='div2'>
+                                <p style="font-size: 16px; color: rgb(85, 85, 85); "> ประกาศวันที่ {{data[8][1]}} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='div3'> 
+                                <p class="fw-bolder" style="font-size: 21px;" > {{data[0][38]}} </p>
+                                <p class="text-start" >ตำแหน่ง : {{data[1][19]}} </p>
+                                <div id='div5'>
+                                    <p class="text-start" ><img src="{{data[7][0]}}" width="25"
+                                        height="25"> {{data[2][19]}} </p>
+                                </div>
+                                <div id='div6'>
+                                    <p class="text-start"><img src="{{data[6][0]}}" width="25"
+                                        height="25"> {{data[3][19]}} </p>
+                                </div>
+                            </div>
+                            <div id='div4'>
+                                <img style="margin-left : 30px" src="{{data[5][19]}}" width="110px" height="110px">
+                            </div>
+                        </div> 
+                    </button>
+                </form>
+
+                <!-- end box 20 -->
+
+                <!-- {% endif %} -->
+
+            </div>
+            <!-- สิ้นสุดส่วนแสดงตำแหน่งงานที่แนะนำ -->
+
+            </p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+
+            </div>
+        </div>
+    </div>
+    <!-- สิ้นส่วนแสดงผล -->
+
+
+    {% endif %}
+
+
+    <!-- footer -->
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <a href="https://www.facebook.com/hashtag/mtlabrmu" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7WtGC8y0JGA09hqO7Hy_RyZnAHN6Fb5U69mQVMWIzxnAzymtaH8xCqK0AlNaOVgHxqnE&usqp=CAU"
+                        width="45" height="45">
+                    <use xlink:href="#bootstrap"></use>
+                    </img>
+                </a>
+                <span class="mb-3 mb-md-0 text-dark">© 2022 MTLab7RMU_AI-Group</span>
+            </div>
+
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <li class="ms-3"><a class="text-muted" href="https://www.facebook.com/ajworawith.sangkatip"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/768px-Facebook_Logo_%282019%29.png"
+                            width="30" height="30">
+                        <use xlink:href="#facebook"></use>
+                        </img>
+                    </a></li>
+            </ul>
+        </footer>
+    </div>
+
+</body>
+
+</html>
+
+<!-- css botton text show data -->
+<style>
+    .btn1 {
+        border: 2px solid black;
+        background-color: white;
+        color: black;
+        padding: 14px 28px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    /* Gray */
+    .default {
+        border-color: #e7e7e7;
+        color: rgb(0, 0, 0);
+    }
+
+    .default:hover {
+        background: #e7e7e7;
+    }
+
+    /* css jobthai */
+    .ant-row {
+        position: relative;
+        height: auto;
+        margin-right: 0;
+        margin-left: 0;
+        zoom: 1;
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .ant-col-12 {
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+    }
+
+    #div1 {
+        float:left;
+        text-align: left;
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+        /* border:solid 2px rgb(12, 221, 82); */
+    }
+    #div2 {
+        float:right;
+        text-align: end;
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+        /* border:solid 2px red; */
+    }
+
+    #div3 {
+        float:left;
+        text-align: left;
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+        /* border:solid 2px rgb(12, 221, 82); */
+    }
+    #div4 {
+        float:right;
+        text-align: end;
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+        /* border:solid 2px red; */
+    }
+    #div5 {
+        float:left;
+        text-align: left;
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+        /* border:solid 2px rgb(76, 0, 255); */
+    }
+    #div6 {
+        float:right;
+        text-align: end;
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+        /* border:solid 2px rgb(226, 241, 11); */
+    }
+
+
+
+
+    
+
+  
+</style>
