@@ -10,11 +10,7 @@ from PyPDF2 import PdfFileReader
 from sklearn.feature_extraction.text import TfidfVectorizer
 import PyPDF2
 import pytesseract
-import sys
-import logging
 app = Flask(__name__)
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.ERROR)
 app.secret_key = 'your secret key'
 
 
