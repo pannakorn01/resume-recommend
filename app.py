@@ -132,5 +132,6 @@ def predict():
     return render_template('index.html',msg_empty = msg_empty)
 
 # Code Run Port
-if __name__ == "__main__":        
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
