@@ -46,9 +46,9 @@ def process_text(text):
 
 def classify(utt):
    # เรียกใช้ fuction tf-idf
-    loaded_vectorizer = pickle.load(open('model\Vectorizer.pickle', 'rb'))
+    loaded_vectorizer = pickle.load(open('./resume-recommend/model/Vectorizer.pickle', 'rb'))
     # เรียกใช้ Model
-    loaded_model = pickle.load(open("model\mlp.pkl", "rb"))
+    loaded_model = pickle.load(open("./resume-recommend/model/mlp.pkl", "rb"))
     # นำคำตอบเข้าไปประมวลผลโมเดล
     p = loaded_model.predict(loaded_vectorizer.transform([utt]))
     return ' '.join(p)
@@ -118,7 +118,7 @@ def predict():
             flash('No selected file')
             return redirect(request.url)
         else:
-            resume_path = "./resume/" + file.filename      
+            resume_path = "./resume-recommend/resume/" + file.filename      
             file.save(resume_path)
             resume = ocr_pdf(resume_path)
             resume_process = process_text(resume)
