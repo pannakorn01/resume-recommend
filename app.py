@@ -119,7 +119,7 @@ def predict():
             return redirect(request.url)
         else:
             resume_path = "./resume/" + file.filename      
-#             file.save(resume_path)
+            file.save(resume_path)
             resume = ocr_pdf(resume_path)
             resume_process = process_text(resume)
             resume_model = classify(resume_process)
