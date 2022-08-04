@@ -118,7 +118,7 @@ def predict():
             flash('No selected file')
             return redirect(request.url)
         else:
-            resume_path = "resume/" + file.filename      
+            resume_path = "./resume/" + file.filename      
             file.save(resume_path)
             resume = ocr_pdf(resume_path)
             resume_process = process_text(resume)
