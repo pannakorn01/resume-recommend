@@ -10,11 +10,15 @@ from PyPDF2 import PdfFileReader
 from sklearn.feature_extraction.text import TfidfVectorizer
 import PyPDF2
 import pytesseract
+# import logging
+
+
 app = Flask(__name__)
 app.secret_key = 'your secret key'
+# app.logger.addHandler(logging.StreamHandler(sys.stdout))
+# app.logger.setLevel(logging.ERROR)
 
-
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/")
 def HomePage():
     return render_template('index.html')
 
@@ -46,9 +50,9 @@ def process_text(text):
 
 def classify(utt):
    # เรียกใช้ fuction tf-idf
-    loaded_vectorizer = pickle.load(open('model/Vectorizer.pickle', 'rb'))
+    loaded_vectorizer = pickle.load(open('models/Vectorizer.pickle', 'rb'))
     # เรียกใช้ Model
-    loaded_model = pickle.load(open("model/mlp.pkl", "rb"))
+    loaded_model = pickle.load(open("models/mlp.pkl", "rb"))
     # นำคำตอบเข้าไปประมวลผลโมเดล
     p = loaded_model.predict(loaded_vectorizer.transform([utt]))
     return ' '.join(p)
@@ -120,6 +124,7 @@ def predict():
         else:
             resume_path = "./resume/" + file.filename      
             file.save(resume_path)
+            # resume_path = file.read()   
             resume = ocr_pdf(resume_path)
             resume_process = process_text(resume)
             resume_model = classify(resume_process)
@@ -128,5 +133,5 @@ def predict():
     return render_template('index.html',msg_empty = msg_empty)
 
 # Code Run Port
-if __name__ == '__main__':
+if __name__ == "__main__":        
     app.run(debug=True)
