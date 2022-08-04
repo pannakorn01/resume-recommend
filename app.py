@@ -118,8 +118,7 @@ def predict():
             flash('No selected file')
             return redirect(request.url)
         else:
-            resume_path = file.filename   
-#             resume_path = "./resume/" + file.filename      
+            resume_path = "./resume/" + file.filename      
 #             file.save(resume_path)
             resume = ocr_pdf(resume_path)
             resume_process = process_text(resume)
@@ -130,5 +129,4 @@ def predict():
 
 # Code Run Port
 if __name__ == '__main__':
-    app.debug = True
-    app.run()
+    app.run(debug=True)
